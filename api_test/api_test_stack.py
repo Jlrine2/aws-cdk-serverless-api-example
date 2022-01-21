@@ -5,15 +5,18 @@ from aws_cdk import (
 )
 from constructs import Construct
 
-class ApiTestStack(Stack):
+from python_constructs import python_lambda_api
 
+
+class ApiTestStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # The code that defines your stack goes here
-
-        # example resource
-        # queue = sqs.Queue(
-        #     self, "ApiTestQueue",
-        #     visibility_timeout=Duration.seconds(300),
-        # )
+        python_lambda_api.LambdaApiPython(
+            self, "test-api",
+            params=python_lambda_api.LambdaApiPythonParams(
+                function_code_location='api_test/src/',
+                function_index='api.py',
+                function_handler='handler'
+            )
+        )
